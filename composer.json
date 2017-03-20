@@ -1,23 +1,27 @@
 {
     "name": "davidsteinsland/cakephp-state-machine",
-    "description": "StateMachineBehavior for CakePHP",
-    "type": "cakephp-plugin",
-    "keywords": ["cakephp", "state", "machine"],
+    "description": "StateMachineBehavior for CakePHP 3",
+    "type": "cakephp3-plugin",
+    "keywords": ["cakephp3", "state", "machine"],
     "homepage": "https://github.com/davidsteinsland/cakephp-state-machine",
     "license": "MIT",
     "authors": [
         {
             "name": "David Steinsland",
             "role": "Author"
+        },
+        {
+            "name": "Ludovic Ganée",
+            "role": "Author"
         }
     ],
     "require": {
-        "php": ">=5.3.0",
+        "php": ">=5.6.0",
         "composer/installers": "*"
     },
-	"require-dev": {
-		"satooshi/php-coveralls": "dev-master"
-	},
+    "require-dev": {
+        "satooshi/php-coveralls": "dev-master"
+    },
     "extra": {
         "installer-name": "StateMachine"
     }

@@ -1,4 +1,4 @@
-CakePHP State Machine
+CakePHP 3 State Machine
 =====================
 [![Build Status](https://travis-ci.org/davidsteinsland/cakephp-state-machine.png?branch=master)](https://travis-ci.org/davidsteinsland/cakephp-state-machine) [![Coverage Status](https://coveralls.io/repos/davidsteinsland/cakephp-state-machine/badge.png?branch=master)](https://coveralls.io/r/davidsteinsland/cakephp-state-machine?branch=master) [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/davidsteinsland/cakephp-state-machine/badges/quality-score.png?s=7d6d7a43f47401c3a4fda69d799c9d671a8659e3)](https://scrutinizer-ci.com/g/davidsteinsland/cakephp-state-machine/) [![Latest Stable Version](https://poser.pugx.org/davidsteinsland/cakephp-state-machine/v/stable.png)](https://packagist.org/packages/davidsteinsland/cakephp-state-machine) [![Total Downloads](https://poser.pugx.org/davidsteinsland/cakephp-state-machine/downloads.png)](https://packagist.org/packages/davidsteinsland/cakephp-state-machine)
 
