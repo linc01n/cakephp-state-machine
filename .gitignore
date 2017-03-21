@@ -1,3 +1,5 @@
 .komodotools
 *.komodoproject
 nbproject/
+composer.lock
+vendor/

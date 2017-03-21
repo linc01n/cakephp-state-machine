@@ -22,6 +22,16 @@
     "require-dev": {
         "satooshi/php-coveralls": "dev-master"
     },
+    "autoload": {
+        "psr-4": {
+            "StateMachine\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "StateMachine\\Test\\": "tests"
+        }
+    },
     "extra": {
         "installer-name": "StateMachine"
     }
