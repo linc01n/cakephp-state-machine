@@ -24,11 +24,7 @@
     },
     "autoload": {
         "psr-4": {
-            "StateMachine\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
+            "StateMachine\\": "src",
             "StateMachine\\Test\\": "tests"
         }
     },
