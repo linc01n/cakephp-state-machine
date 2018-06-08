@@ -1,8 +1,5 @@
 <?php
-/**
- */
-
-App::uses('String', 'Utility');
+namespace StateMachine\Shell;
 
 /**
  * Dot Shell Class
