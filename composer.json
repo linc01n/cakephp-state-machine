@@ -24,11 +24,8 @@
     },
     "autoload": {
         "psr-4": {
-            "StateMachine\\": "src",
-            "StateMachine\\Test\\": "tests"
+            "StateMachine\\": "src/",
+            "StateMachine\\Test\\": "tests/"
         }
-    },
-    "extra": {
-        "installer-name": "StateMachine"
     }
 }
