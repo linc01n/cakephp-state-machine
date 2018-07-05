@@ -1,8 +1,7 @@
 <?php
-/**
- */
+namespace StateMachine\Shell;
 
-App::uses('String', 'Utility');
+use Cake\Console\Shell;
 
 /**
  * Dot Shell Class
@@ -11,59 +10,45 @@ App::uses('String', 'Utility');
  */
 class DotShell extends Shell {
 
+    /**
+     * @var \StateMachine\Model\Behavior\StateMachineBehavior
+     */
 	public $Model;
 
 	public function main() {
-		$this->out('Hello world.');
+		$this->out('bin/cake dot generate ModelName name.png');
 	}
 
-/**
- * This function generates a png file from a given dot. A dot can be generated wit *toDot functions
- * @param  Model	$model		 The model being acted on
- * @param  string   $dot         The contents for graphviz
- * @param  string   $destFile    Name with full path to where file is to be created
- * @return return                returns whatever shell_exec returns
- */
-	protected function _generatePng($dot, $destFile) {
-		if (!isset($dot)) {
-			return false;
-		}
-		$dotExec = "echo '%s' | dot -Tpng -o%s";
-		$path = pathinfo($destFile);
-		$command = sprintf($dotExec, $dot, $destFile);
-		return shell_exec($command);
-	}
-
-	public function generate() {
+    public function generate() {
 		$this->out('Generate files');
-		switch ($this->args[1]) {
-			case 'all':
-				$this->out('Load Model:' . $this->args[0]);
-				$this->loadModel($this->args[0]);
-				$this->Model = new $this->args[0](1);
 
-				// generate all roles
-				$dot = $this->Model->createDotFileForRoles($this->Model->roles, array(
-					'color' => 'lightgrey',
-					'activeColor' => 'green'
-					));
-				$this->_generatePng($dot, TMP . $this->args[2]);
+		$name = $this->args[0];
 
-				foreach ($this->Model->roles as $role => $options) {
-					$dot = $this->Model->createDotFileForRoles(array($role => $this->Model->roles[$role]), array(
-						'color' => 'lightgrey',
-						'activeColor' => 'green'
-						));
-					$this->_generatePng($dot, TMP . $role . '_' . $this->args[2]);
-				}
-				# code...
-				break;
+        $this->out('Load Model:' . $name);
+        $this->loadModel($name);
+        $this->Model = $this->{$name};
 
-			default:
-				# code...
-				break;
-		}
+        // generate all roles
+        $dot = $this->Model->toDot();
+        $this->_generatePng($dot, TMP . $this->args[2]);
 	}
+
+    /**
+     * This function generates a png file from a given dot. A dot can be generated wit *toDot functions
+     * @param  Model	$model		 The model being acted on
+     * @param  string   $dot         The contents for graphviz
+     * @param  string   $destFile    Name with full path to where file is to be created
+     * @return return                returns whatever shell_exec returns
+     */
+    protected function _generatePng($dot, $destFile) {
+        if (!isset($dot)) {
+            return false;
+        }
+        $dotExec = "echo '%s' | dot -Tpng -o%s";
+        $path = pathinfo($destFile);
+        $command = sprintf($dotExec, $dot, $destFile);
+        return shell_exec($command);
+    }
 
 }
 

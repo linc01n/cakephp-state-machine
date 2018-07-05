@@ -1,7 +1,7 @@
 {
     "name": "davidsteinsland/cakephp-state-machine",
     "description": "StateMachineBehavior for CakePHP 3",
-    "type": "cakephp3-plugin",
+    "type": "cakephp-plugin",
     "keywords": ["cakephp3", "state", "machine"],
     "homepage": "https://github.com/davidsteinsland/cakephp-state-machine",
     "license": "MIT",
