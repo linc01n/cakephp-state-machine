@@ -41,7 +41,11 @@ class StateMachineBehavior extends Behavior
             ]
         ],
         'state_listeners' => [],
-        'methods' => []
+        'methods' => [],
+        'fields' => [
+            'state' => 'state',
+            'previous_state' => 'previous_state',
+        ],
     ];
 
     /**
@@ -121,8 +125,8 @@ class StateMachineBehavior extends Behavior
         EntityInterface $entity,
         ArrayObject $options
     ) {
-        if (empty($entity->state) && $entity->isNew()) {
-            $entity->state = $this->_table->initialState;
+        if (empty($entity->get($this->getConfig('fields.state'))) && $entity->isNew()) {
+            $entity->set($this->getConfig('fields.state'), $this->_table->initialState);
         }
 
         return true;
@@ -172,8 +176,8 @@ class StateMachineBehavior extends Behavior
 
         $this->_callTransitionListeners($entity, $transition, 'before');
 
-        $entity->previous_state = $this->getCurrentState($entity);
-        $entity->state = $state;
+        $entity->set($this->getConfig('fields.previous_state'), $this->getCurrentState($entity));
+        $entity->set($this->getConfig('fields.state'), $state);
 
         $this->_callTransitionListeners($entity, $transition, 'after');
 
@@ -303,7 +307,7 @@ class StateMachineBehavior extends Behavior
      */
     public function getCurrentState(Entity $entity)
     {
-        return !empty($entity->state) ? $entity->state : $this->_table->initialState;
+        return $entity->get($this->getConfig('fields.state')) ?: $this->_table->initialState;
     }
 
     /**
@@ -314,7 +318,7 @@ class StateMachineBehavior extends Behavior
      */
     public function getPreviousState(Entity $entity)
     {
-        return $entity->previous_state;
+        return $entity->get($this->getConfig('fields.previous_state'));
     }
 
     /**
