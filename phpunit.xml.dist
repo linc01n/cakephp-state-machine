@@ -1,15 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit colors="true" stopOnFailure="true" encoding="utf-8">
+<phpunit
+		colors="true"
+		processIsolation="false"
+		stopOnFailure="false"
+		syntaxCheck="false"
+		bootstrap="./tests/bootstrap.php"
+>
+	<php>
+		<ini name="memory_limit" value="-1"/>
+		<ini name="apc.enable_cli" value="1"/>
+	</php>
+
+	<!-- Add any additional test suites you want to run here -->
+	<testsuites>
+		<testsuite name="Model">
+			<directory>./tests/TestCase/Model</directory>
+		</testsuite>
+	</testsuites>
+
+	<!-- Setup a listener for fixtures -->
+	<listeners>
+		<listener
+				class="\Cake\TestSuite\Fixture\FixtureInjector"
+				file="./vendor/cakephp/cakephp/src/TestSuite/Fixture/FixtureInjector.php">
+			<arguments>
+				<object class="\Cake\TestSuite\Fixture\FixtureManager" />
+			</arguments>
+		</listener>
+	</listeners>
+
+	<!-- Ignore vendor tests in code coverage reports -->
 	<filter>
 		<whitelist>
-			<directory>Controller</directory>
-			<directory>Model</directory>
-			<directory>View</directory>
-			<directory>Lib</directory>
-			<directory>Console</directory>
+			<directory suffix=".php">./src/</directory>
+			<directory suffix=".php">./plugins/*/src/</directory>
 		</whitelist>
 	</filter>
-	<logging>
-		<log type="coverage-text" target="php://stdout" showUncoveredFiles="true" />
-	</logging>
 </phpunit>

@@ -1,5 +1,20 @@
 <?php
 /**
+ * StateMachine\Model\Behavior\StateMachineBehavior
+ */
+
+namespace StateMachine\Model\Behavior;
+
+use ArrayObject;
+use BadMethodCallException;
+use Cake\Datasource\EntityInterface;
+use Cake\Event\Event;
+use Cake\ORM\Behavior;
+use Cake\ORM\Entity;
+use Cake\ORM\Table;
+use Cake\Utility\Inflector;
+
+/**
  * StateMachineBehavior
  *
  * A finite state machine is a machine that cannot move between states unless
@@ -9,15 +24,6 @@
  * @author David Steinsland
  * @author Ludovic Ganée
  */
-namespace StateMachine\Model\Behavior;
-
-use Cake\ORM\Behavior;
-use Cake\ORM\Entity;
-use Cake\Datasource\EntityInterface;
-use Cake\ORM\Table;
-use Cake\Utility\Inflector;
-use Cake\Event\Event;
-
 class StateMachineBehavior extends Behavior
 {
     /**
@@ -28,17 +34,15 @@ class StateMachineBehavior extends Behavior
      * @var array
      */
     protected $_defaultConfig = [
-        'transition_listeners' => array(
-            'transition' => array(
-                'before' => array(),
-                'after' => array()
-            )
-        ),
-        'state_listeners' => array(),
-        'methods' => array()
+        'transition_listeners' => [
+            'transition' => [
+                'before' => [],
+                'after' => []
+            ]
+        ],
+        'state_listeners' => [],
+        'methods' => []
     ];
-
-
 
     /**
      * Table using this behavior
@@ -73,8 +77,9 @@ class StateMachineBehavior extends Behavior
         if (!property_exists($this->_table, 'transitions')) {
             throw new \InvalidArgumentException(
                 'Missing attribute "transitions" '
-                . 'in "'.$this->_table->alias() . 'Table" '
-                . 'for using StateMachineBehavior');
+                . 'in "'.$this->_table->getAlias() . 'Table" '
+                . 'for using StateMachineBehavior'
+            );
         }
 
         foreach ($this->_table->transitions as $states) {
@@ -89,8 +94,13 @@ class StateMachineBehavior extends Behavior
      * Array of all configured states. Initialized by self::initialize()
      * @var array
      */
-    protected $_availableStates = array();
+    protected $_availableStates = [];
 
+    /**
+     * Add a value to $this->_availableStates
+     *
+     * @param string $state
+     */
     protected function _addAvailableState($state)
     {
         if ($state != 'All' && !in_array($state, $this->_availableStates)) {
@@ -102,11 +112,15 @@ class StateMachineBehavior extends Behavior
      * Add initial State on new entities
      *
      * @param	Event           $event
+     * @param	EntityInterface $entity
      * @param	ArrayObject     $options	Options passed to save
      * @return	boolean
      */
-    public function beforeSave(Event $event, EntityInterface $entity, \ArrayObject $options)
-    {
+    public function beforeSave(/** @noinspection PhpUnusedParameterInspection */
+        Event $event,
+        EntityInterface $entity,
+        ArrayObject $options
+    ) {
         if (empty($entity->state) && $entity->isNew()) {
             $entity->state = $this->_table->initialState;
         }
@@ -122,7 +136,7 @@ class StateMachineBehavior extends Behavior
      */
     public function getAllTransitions()
     {
-        return array_keys($this->_table->transitions);
+        return array_keys((array)$this->_table->transitions);
     }
 
     /**
@@ -163,18 +177,18 @@ class StateMachineBehavior extends Behavior
 
         $this->_callTransitionListeners($entity, $transition, 'after');
 
-        $stateListeners = array();
+        $stateListeners = [];
         $config = $this->getConfig('state_listeners');
         if (isset($config[$state])) {
             $stateListeners = $config[$state];
         }
 
-        foreach (array(
+        foreach ([
             'onState' . Inflector::camelize($state),
             'onStateChange'
-        ) as $method) {
+         ] as $method) {
             if (method_exists($this->_table, $method)) {
-                $stateListeners[] = array($this->_table, $method);
+                $stateListeners[] = [$this->_table, $method];
             }
         }
 
@@ -203,11 +217,10 @@ class StateMachineBehavior extends Behavior
      *
      * @param Entity $entity
      * @param string $transition The transition being checked
-     * @param string $role The role which should execute the transition
      * @return boolean whether or not the machine can perform the transition
      * @throws BadMethodCallException when method does not exists
      */
-    public function can(Entity $entity, $transition, $role = null)
+    public function can(Entity $entity, $transition)
     {
         $transition = $this->_deFormalizeMethodName($transition);
 
@@ -230,10 +243,10 @@ class StateMachineBehavior extends Behavior
     public function on($transition, $triggerType, callable $cb, $bubble = true)
     {
         $config = $this->getConfig('transition_listeners');
-        $config[Inflector::underscore($transition)][$triggerType][] = array(
+        $config[Inflector::underscore($transition)][$triggerType][] = [
             'cb' => $cb,
             'bubble' => $bubble
-        );
+        ];
         $this->setConfig('transition_listeners', $config);
     }
 
@@ -243,6 +256,7 @@ class StateMachineBehavior extends Behavior
      *
      * @param	string	$state	The state which the machine should enter
      * @param	callable	$cb		The callback function that will be called
+     * @return self
      */
     public function when($state, callable $cb)
     {
@@ -353,15 +367,15 @@ EOT;
             $listeners = array_merge($transitionListeners[$transition][$triggerType], $listeners);
         }
 
-        foreach (array(
+        foreach ([
             'on' . Inflector::camelize($triggerType . 'Transition'),
             'on' . Inflector::camelize($triggerType . $transition)
-        ) as $method) {
+         ] as $method) {
             if (method_exists($this->_table, $method)) {
-                $listeners[] = array(
-                    'cb' => array($this->_table, $method),
+                $listeners[] = [
+                    'cb' => [$this->_table, $method],
                     'bubble' => true
-                );
+                ];
             }
         }
 

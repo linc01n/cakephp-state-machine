@@ -6,21 +6,20 @@ use Cake\TestSuite\Fixture\TestFixture;
 
 class VehicleFixture extends TestFixture
 {
+    public $fields = [
+        'id' => ['type' => 'integer'],
+        'title' => ['type' => 'string', 'length' => 255, 'null' => false],
+        'state' => ['type' => 'string', 'length' => 255, 'null' => true],
+        'previous_state' => ['type' => 'string', 'length' => 255, 'null' => true],
+        '_constraints' => [
+            'primary' => ['type' => 'primary', 'columns' => ['id']]
+        ]
+    ];
 
-	public $fields = array(
-		'id' => array('type' => 'integer'),
-		'title' => array('type' => 'string', 'length' => 255, 'null' => false),
-		'state' => array('type' => 'string', 'length' => 255, 'null' => true),
-		'previous_state' => array('type' => 'string', 'length' => 255, 'null' => true),
-        '_constraints' => array(
-            'primary' => array('type' => 'primary', 'columns' => array('id'))
-        )
-	);
-
-	public $records = array(
-		array('title' => 'Audi Q4', 'state' => 'parked'),
-		array('title' => 'Toyota Yaris', 'state' => 'parked'),
-		array('title' => 'Opel Astra', 'state' => 'idling', 'previous_state' => 'parked'),
-		array('title' => 'Nissan Leaf', 'state' => 'stalled', 'previous_state' => 'third_gear'),
-	);
+    public $records = [
+        ['title' => 'Audi Q4', 'state' => 'parked'],
+        ['title' => 'Toyota Yaris', 'state' => 'parked'],
+        ['title' => 'Opel Astra', 'state' => 'idling', 'previous_state' => 'parked'],
+        ['title' => 'Nissan Leaf', 'state' => 'stalled', 'previous_state' => 'third_gear'],
+    ];
 }

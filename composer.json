@@ -17,15 +17,15 @@
     ],
     "require": {
         "php": ">=5.6.0",
-        "composer/installers": "*"
+        "cakephp/cakephp": "^3.5"
     },
     "require-dev": {
-        "satooshi/php-coveralls": "dev-master"
+        "phpunit/phpunit": "^6.0"
     },
     "autoload": {
         "psr-4": {
-            "StateMachine\\": "src/",
-            "StateMachine\\Test\\": "tests/"
+            "StateMachine\\": "src",
+            "StateMachine\\Test\\": "tests"
         }
     }
 }

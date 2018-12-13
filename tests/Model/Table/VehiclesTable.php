@@ -3,7 +3,13 @@
 namespace StateMachine\Test\Model\Table;
 
 use Cake\ORM\Table;
+use StateMachine\Model\Behavior\StateMachineBehavior;
 
+/**
+ * Class VehiclesTable
+ * @package StateMachine\Test\Model\Table
+ * @mixin StateMachineBehavior
+ */
 class VehiclesTable extends Table
 {
     public function initialize(array $config)
@@ -13,41 +19,41 @@ class VehiclesTable extends Table
         $this->setEntityClass('StateMachine\Test\Model\Entity\Vehicle');
     }
 
-	public $initialState = 'parked';
+    public $initialState = 'parked';
 
-	public $transitions = array(
-		'ignite' => array(
-			'parked' => 'idling',
-			'stalled' => 'stalled'
-		),
-		'park' => array(
-			'idling' => 'parked',
-			'first_gear' => 'parked'
-		),
-		'shift_up' => array(
-			'idling' => 'first_gear',
-			'first_gear' => 'second_gear',
-			'second_gear' => 'third_gear'
-		),
-		'shift_down' => array(
-			'first_gear' => 'idling',
-			'second_gear' => 'first_gear',
-			'third_gear' => 'second_gear'
-		),
-		'crash' => array(
-			'first_gear' => 'stalled',
-			'second_gear' => 'stalled',
-			'third_gear' => 'stalled'
-		),
-		'repair' => array(
-			'stalled' => 'parked'
-		),
-		'idle' => array(
-			'first_gear' => 'idling'
-		),
-		'turn_off' => array(
-			'all' => 'parked'
-		),
-		'baz' => array()
-	);
+    public $transitions = [
+        'ignite' => [
+            'parked' => 'idling',
+            'stalled' => 'stalled'
+        ],
+        'park' => [
+            'idling' => 'parked',
+            'first_gear' => 'parked'
+        ],
+        'shift_up' => [
+            'idling' => 'first_gear',
+            'first_gear' => 'second_gear',
+            'second_gear' => 'third_gear'
+        ],
+        'shift_down' => [
+            'first_gear' => 'idling',
+            'second_gear' => 'first_gear',
+            'third_gear' => 'second_gear'
+        ],
+        'crash' => [
+            'first_gear' => 'stalled',
+            'second_gear' => 'stalled',
+            'third_gear' => 'stalled'
+        ],
+        'repair' => [
+            'stalled' => 'parked'
+        ],
+        'idle' => [
+            'first_gear' => 'idling'
+        ],
+        'turn_off' => [
+            'all' => 'parked'
+        ],
+        'baz' => []
+    ];
 }
