@@ -40,6 +40,7 @@ class StateMachineBehaviorTest extends TestCase
 
     public function testInitialState()
     {
+        /** @var Vehicle $entity */
         $entity = $this->Vehicles->find()->first();
         $this->assertEquals("parked", $this->Vehicles->getCurrentState($entity));
         $this->assertEquals('parked', $this->Vehicles->getStates($entity, 'turn_off'));
@@ -47,6 +48,7 @@ class StateMachineBehaviorTest extends TestCase
 
     public function testIsMethods()
     {
+        /** @var Vehicle $entity */
         $entity = $this->Vehicles->find()
             ->where(['state' => 'parked'])
             ->first();
@@ -76,6 +78,7 @@ class StateMachineBehaviorTest extends TestCase
 
     public function testOnMethods()
     {
+        /** @var Vehicle $entity */
         $entity = $this->Vehicles->find()
             ->where(['state' => 'parked'])
             ->first();
@@ -112,6 +115,7 @@ class StateMachineBehaviorTest extends TestCase
 
     public function testWhenMethods()
     {
+        /** @var Vehicle $entity */
         $entity = $this->Vehicles->find()
             ->where(['state' => 'parked'])
             ->first();
@@ -130,6 +134,7 @@ class StateMachineBehaviorTest extends TestCase
 
     public function testBubble()
     {
+        /** @var Vehicle $entity */
         $entity = $this->Vehicles->find()
             ->where(['state' => 'parked'])
             ->first();
@@ -148,6 +153,7 @@ class StateMachineBehaviorTest extends TestCase
 
     public function testInvalidTransition()
     {
+        /** @var Vehicle $entity */
         $entity = $this->Vehicles->find()
             ->where(['state' => 'parked'])
             ->first();
@@ -159,6 +165,7 @@ class StateMachineBehaviorTest extends TestCase
 
     public function testVehicleTitle()
     {
+        /** @var Vehicle $entity */
         $entity = $this->Vehicles->find()
             ->where(['title' => 'Opel Astra'])
             ->first();
@@ -219,6 +226,7 @@ EOT;
 
     public function testOnStateChange()
     {
+        /** @var Vehicle $entity */
         $entity = $this->Vehicles->find()
             ->where(['state' => 'parked'])
             ->first();
