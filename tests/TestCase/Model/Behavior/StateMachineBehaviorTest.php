@@ -4,6 +4,7 @@ namespace StateMachine\Test\TestCase\Model\Behavior;
 
 use Cake\TestSuite\TestCase;
 use Cake\ORM\TableRegistry;
+use StateMachine\Test\Model\Entity\Vehicle;
 use StateMachine\Test\Model\Table\VehiclesTable;
 
 class StateMachineBehaviorTest extends TestCase
@@ -15,7 +16,7 @@ class StateMachineBehaviorTest extends TestCase
     /**
      * @var VehiclesTable
      */
-    public $Vehicle;
+    public $Vehicles;
 
     public $StateMachine;
 
@@ -235,6 +236,24 @@ EOT;
         $vehicles->expects($this->once())->method('onStateIdling');
 
         $this->assertTrue($vehicles->transition($entity, 'ignite'));
+    }
+
+    public function testFilledFields()
+    {
+        /** @var Vehicle $entity */
+        $entity = $this->Vehicles->find()
+            ->where(['state' => 'parked'])
+            ->firstOrFail();
+        $before = $entity->toArray();
+        $this->assertTrue($this->Vehicles->transition($entity, 'ignite'));
+        $this->assertNotEquals($entity->get('state'), $before['state']);
+        $this->assertEquals($entity->get('previous_state'), $before['state']);
+        $this->assertTrue($this->Vehicles->transition($entity, 'shift_up'));
+        $this->assertNotEmpty($entity->get('last_state_update'));
+        $this->assertNotEmpty($entity->get('states_history'));
+        $history = json_decode($entity->get('states_history'));
+        $this->assertEquals($entity->get('previous_state'), $history[0]->state);
+        $this->assertEquals($entity->get('last_state_update'), new \DateTime($history[1]->date));
     }
 
     public function tearDown()

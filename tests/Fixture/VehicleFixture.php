@@ -11,6 +11,8 @@ class VehicleFixture extends TestFixture
         'title' => ['type' => 'string', 'length' => 255, 'null' => false],
         'state' => ['type' => 'string', 'length' => 255, 'null' => true],
         'previous_state' => ['type' => 'string', 'length' => 255, 'null' => true],
+        'last_state_update' => ['type' => 'timestamp', 'null' => true],
+        'states_history' => ['type' => 'text', 'null' => true],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id']]
         ]

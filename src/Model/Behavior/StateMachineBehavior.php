@@ -45,6 +45,8 @@ class StateMachineBehavior extends Behavior
         'fields' => [
             'state' => 'state',
             'previous_state' => 'previous_state',
+            'last_state_update' => 'last_state_update',
+            'states_history' => 'states_history',
         ],
     ];
 
@@ -178,6 +180,22 @@ class StateMachineBehavior extends Behavior
 
         $entity->set($this->getConfig('fields.previous_state'), $this->getCurrentState($entity));
         $entity->set($this->getConfig('fields.state'), $state);
+
+        $datetime = new \DateTime;
+        $datetime->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+        $entity->set($this->getConfig('fields.last_state_update'), $datetime);
+
+        if ($history = $entity->get($this->getConfig('fields.states_history'))) {
+            $history = json_decode($history, true);
+        } else {
+            $history = [];
+        }
+
+        $history[] = [
+            'date' => $datetime->format('Y-m-d\TH:i:s.uO'),
+            'state' => $state,
+        ];
+        $entity->set($this->getConfig('fields.states_history'), json_encode($history));
 
         $this->_callTransitionListeners($entity, $transition, 'after');
 
