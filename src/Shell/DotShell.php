@@ -17,13 +17,36 @@ class DotShell extends Shell
      */
     public $Model;
 
-    public function main($model = null, $filename = null)
+
+    /**
+     * Gets the option parser instance and configures it.
+     *
+     * By overriding this method you can configure the ConsoleOptionParser before returning it.
+     *
+     * @return \Cake\Console\ConsoleOptionParser
+     * @link https://book.cakephp.org/3.0/en/console-and-shells.html#configuring-options-and-generating-help
+     */
+    public function getOptionParser()
     {
-        if (!$model && !$filename) {
-            $this->out('bin/cake dot generate ModelName name.png');
-        } else {
-            return $this->generate($model, $filename);
-        }
+        $parser = parent::getOptionParser();
+        $parser->setDescription([
+            "--------------------------------------------------------------------",
+            "StateMachine DotShell",
+            "--------------------------------------------------------------------",
+        ]);
+        $parser->addArgument('model', [
+            'required' => true,
+            'help' => "Model name"
+        ]);
+        $parser->addArgument('filename', [
+            'help' => "output filename"
+        ]);
+        return $parser;
+    }
+
+    public function main($model, $filename = null)
+    {
+        return $this->generate($model, $filename);
     }
 
     public function generate($model, $filename = null)
