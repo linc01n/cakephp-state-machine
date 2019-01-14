@@ -41,6 +41,11 @@ class DotShell extends Shell
         $parser->addArgument('filename', [
             'help' => "output filename"
         ]);
+        $parser->addOption('output-dir', [
+            'help' => "output directory",
+            'default' => rtrim(TMP, DS),
+            'short' => 'o',
+        ]);
         return $parser;
     }
 
@@ -66,7 +71,7 @@ class DotShell extends Shell
         if ($dir !== '.' && is_dir($dir) && is_writable($dir)) {
             $dest = $dir . DS . basename($filename);
         } else {
-            $dest = TMP . $filename;
+            $dest = $this->param('output-dir') . DS . $filename;
         }
         $this->_generatePng($dot, $dest);
     }
