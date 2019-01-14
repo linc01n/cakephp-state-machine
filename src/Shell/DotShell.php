@@ -49,6 +49,11 @@ class DotShell extends Shell
         }
         $dotExec = "echo '%s' | dot -Tpng -o%s";
         $command = sprintf($dotExec, $dot, $destFile);
-        return shell_exec($command);
+        exec($command." 2>&1", $output, $code);
+        if ($code === 0) {
+            $this->success(TMP . $this->args[1]);
+        } else {
+            $this->err(implode(PHP_EOL, $output));
+        }
     }
 }
