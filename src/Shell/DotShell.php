@@ -2,6 +2,7 @@
 namespace StateMachine\Shell;
 
 use Cake\Console\Shell;
+use Cake\Utility\Inflector;
 
 /**
  * Dot Shell Class
@@ -16,24 +17,35 @@ class DotShell extends Shell
      */
     public $Model;
 
-    public function main()
+    public function main($model = null, $filename = null)
     {
-        $this->out('bin/cake dot generate ModelName name.png');
+        if (!$model && !$filename) {
+            $this->out('bin/cake dot generate ModelName name.png');
+        } else {
+            return $this->generate($model, $filename);
+        }
     }
 
-    public function generate()
+    public function generate($model, $filename = null)
     {
         $this->out('Generate files');
 
-        $name = $this->args[0];
-
-        $this->out('Load Model:' . $name);
-        $this->loadModel($name);
-        $this->Model = $this->{$name};
+        $this->out('Load Model:' . $model);
+        $this->Model = $this->loadModel($model);
 
         // generate all roles
         $dot = $this->Model->toDot();
-        $this->_generatePng($dot, TMP . $this->args[1]);
+
+        if (empty($filename)) {
+            $filename = Inflector::underscore($this->Model->getAlias()).'-states.png';
+        }
+        $dir = dirname($filename);
+        if ($dir !== '.' && is_dir($dir) && is_writable($dir)) {
+            $dest = $dir . DS . basename($filename);
+        } else {
+            $dest = TMP . $filename;
+        }
+        $this->_generatePng($dot, $dest);
     }
 
     /**
@@ -51,7 +63,7 @@ class DotShell extends Shell
         $command = sprintf($dotExec, $dot, $destFile);
         exec($command." 2>&1", $output, $code);
         if ($code === 0) {
-            $this->success(TMP . $this->args[1]);
+            $this->success($destFile);
         } else {
             $this->err(implode(PHP_EOL, $output));
         }
