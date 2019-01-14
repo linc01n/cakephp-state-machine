@@ -33,7 +33,7 @@ class DotShell extends Shell
 
         // generate all roles
         $dot = $this->Model->toDot();
-        $this->_generatePng($dot, TMP . $this->args[2]);
+        $this->_generatePng($dot, TMP . $this->args[1]);
     }
 
     /**
