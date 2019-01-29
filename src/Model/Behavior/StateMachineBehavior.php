@@ -163,11 +163,11 @@ class StateMachineBehavior extends Behavior
      * $this->Entity->shiftGear();
      * }}}
      *
-     * @param Entity $entity
-     * @param string $transition The transition being initiated
+     * @param EntityInterface $entity
+     * @param string $transition The transition beingda initiated
      * @return boolean success
      */
-    public function transition(Entity $entity, $transition)
+    public function transition(EntityInterface $entity, $transition)
     {
         $transition = Inflector::underscore($transition);
         $state = $this->getStates($entity, $transition);
@@ -224,12 +224,12 @@ class StateMachineBehavior extends Behavior
     /**
      * Checks whether the state machine is in the given state
      *
-     * @param Entity $entity
+     * @param EntityInterface $entity
      * @param string $state The state being checked
      * @return boolean whether or not the state machine is in the given state
      * @throws BadMethodCallException when method does not exists
      */
-    public function is(Entity $entity, $state)
+    public function is(EntityInterface $entity, $state)
     {
         return $this->getCurrentState($entity) === $this->_deFormalizeMethodName($state);
     }
@@ -237,12 +237,12 @@ class StateMachineBehavior extends Behavior
     /**
      * Checks whether or not the machine is able to perform transition, in its current state
      *
-     * @param Entity $entity
+     * @param EntityInterface $entity
      * @param string $transition The transition being checked
      * @return boolean whether or not the machine can perform the transition
      * @throws BadMethodCallException when method does not exists
      */
-    public function can(Entity $entity, $transition)
+    public function can(EntityInterface $entity, $transition)
     {
         $transition = $this->_deFormalizeMethodName($transition);
 
@@ -295,7 +295,7 @@ class StateMachineBehavior extends Behavior
      * @param	string	$transition	The transition name
      * @return	mixed				False if the transition doesnt yield any states, or an array of states
      */
-    public function getStates(Entity $entity, $transition)
+    public function getStates(EntityInterface $entity, $transition)
     {
         if (!isset($this->_table->transitions[$transition])) {
             // transition doesn't exist
@@ -323,7 +323,7 @@ class StateMachineBehavior extends Behavior
      * @param	Entity	$entity
      * @return	string			The current state of the machine
      */
-    public function getCurrentState(Entity $entity)
+    public function getCurrentState(EntityInterface $entity)
     {
         return $entity->get($this->getConfig('fields.state')) ?: $this->_table->initialState;
     }
@@ -334,7 +334,7 @@ class StateMachineBehavior extends Behavior
      * @param	Entity	$entity
      * @return	string			The previous state of the machine
      */
-    public function getPreviousState(Entity $entity)
+    public function getPreviousState(EntityInterface $entity)
     {
         return $entity->get($this->getConfig('fields.previous_state'));
     }
@@ -380,7 +380,7 @@ EOT;
      * @param	string	$transition		The transition name
      * @param	string	$triggerType	Either before or after
      */
-    protected function _callTransitionListeners(Entity $entity, $transition, $triggerType = 'after')
+    protected function _callTransitionListeners(EntityInterface $entity, $transition, $triggerType = 'after')
     {
         $transitionListeners = $this->getConfig('transition_listeners');
         $listeners = $transitionListeners['transition'][$triggerType];
