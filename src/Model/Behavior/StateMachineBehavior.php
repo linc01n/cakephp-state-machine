@@ -222,6 +222,21 @@ class StateMachineBehavior extends Behavior
     }
 
     /**
+     * Allows moving from one state to another.
+     * @param EntityInterface $entity
+     * @param string $transition
+     * @return $this
+     * @throws Exception\TransitionFailedException if there is no change of state
+     */
+    public function transitionOrFail(EntityInterface $entity, $transition)
+    {
+        if (!$this->transition($entity, $transition)) {
+            throw new Exception\TransitionFailedException($entity, [$transition]);
+        }
+        return $this;
+    }
+
+    /**
      * Checks whether the state machine is in the given state
      *
      * @param EntityInterface $entity
