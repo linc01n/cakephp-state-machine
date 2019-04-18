@@ -1,2 +1,7 @@
 .komodotools
 *.komodoproject
+nbproject/
+composer.lock
+vendor/
+/.idea/*
+.php_cs.cache
