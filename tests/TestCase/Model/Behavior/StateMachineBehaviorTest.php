@@ -20,7 +20,7 @@ class StateMachineBehaviorTest extends TestCase
 
     public $StateMachine;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->Vehicles = TableRegistry::getTableLocator()->get('Vehicles', [
@@ -188,7 +188,7 @@ class StateMachineBehaviorTest extends TestCase
 
     public function testCreateVehicle()
     {
-        $entity = $this->Vehicles->newEntity();
+        $entity = $this->Vehicles->newEntity([]);
         $entity->title = 'Toybota';
         $this->Vehicles->save($entity);
         $this->assertEquals(5, $entity->id);
@@ -230,20 +230,14 @@ EOT;
         $entity = $this->Vehicles->find()
             ->where(['state' => 'parked'])
             ->first();
-
-        /** @var \StateMachine\Test\Model\Table\VehiclesTable|\PHPUnit_Framework_MockObject_MockObject $vehicles */
-        $vehicles = $this->getMockForModel(
-            'Vehicles',
-            ['onStateChange', 'onStateIdling', 'onBeforeTransition', 'onAfterTransition'],
-            ['className' => 'StateMachine\Test\Model\Table\VehiclesTable']
-        );
-
-        $vehicles->expects($this->once())->method('onBeforeTransition');
-        $vehicles->expects($this->once())->method('onAfterTransition');
-        $vehicles->expects($this->once())->method('onStateChange');
-        $vehicles->expects($this->once())->method('onStateIdling');
-
-        $this->assertTrue($vehicles->transition($entity, 'ignite'));
+        $this->assertTrue($this->Vehicles->transition($entity, 'ignite'));
+        $expected = [
+            'onBeforeTransition',
+            'onAfterTransition',
+            'onStateIdling',
+            'onStateChange',
+        ];
+        $this->assertEquals($expected, $this->Vehicles->events);
     }
 
     public function testFilledFields()
@@ -264,7 +258,7 @@ EOT;
         $this->assertEquals($entity->get('last_state_update'), new \DateTime($history[1]->date));
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         unset($this->Vehicles);

@@ -78,7 +78,7 @@ class StateMachineBehavior extends Behavior
      * @param array $config The config for this behavior.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         if (!property_exists($this->_table, 'transitions')) {
             throw new \InvalidArgumentException(
@@ -171,7 +171,6 @@ class StateMachineBehavior extends Behavior
     {
         $transition = Inflector::underscore($transition);
         $state = $this->getStates($entity, $transition);
-
         if (!$state) {
             return false;
         }

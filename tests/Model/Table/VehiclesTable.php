@@ -12,7 +12,7 @@ use StateMachine\Model\Behavior\StateMachineBehavior;
  */
 class VehiclesTable extends Table
 {
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         $this->setTable('vehicles');
         $this->addBehavior('StateMachine.StateMachine');
@@ -56,4 +56,22 @@ class VehiclesTable extends Table
         ],
         'baz' => []
     ];
+    public $events = [];
+
+    public function onBeforeTransition()
+    {
+        $this->events[] = __FUNCTION__;
+    }
+    public function onStateChange()
+    {
+        $this->events[] = __FUNCTION__;
+    }
+    public function onAfterTransition()
+    {
+        $this->events[] = __FUNCTION__;
+    }
+    public function onStateIdling()
+    {
+        $this->events[] = __FUNCTION__;
+    }
 }
