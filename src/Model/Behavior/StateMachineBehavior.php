@@ -438,4 +438,28 @@ EOT;
     {
         return Inflector::underscore(preg_replace('#^(can|is)#', '', $name));
     }
+
+    /**
+     * Do $transition to all rows returned in $conditions
+     *
+     * @param string $transition The transition name
+     * @param array  $conditions updateAll conditions
+     * @return int Count Returns the affected rows.
+     */
+    public function transitionAll($transition, $conditions)
+    {
+        if (!isset($this->_table->transitions[$transition])) {
+            // transition doesn't exist
+            return false;
+        }
+        $stateField = $this->getConfig('fields.state');
+        $count = 0;
+        foreach ($this->_table->transitions[$transition] as $stateFrom => $stateTo) {
+            $count += (int)$this->_table->updateAll(
+                [$stateField => Inflector::underscore($stateTo)],
+                $conditions + [$stateField => Inflector::underscore($stateFrom)]
+            );
+        }
+        return $count;
+    }
 }

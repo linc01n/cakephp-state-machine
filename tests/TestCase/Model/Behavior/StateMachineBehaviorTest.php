@@ -258,7 +258,19 @@ EOT;
         $this->assertEquals($entity->get('last_state_update'), new \DateTime($history[1]->date));
     }
 
-    public function tearDown(): void
+    public function testTransitionAll()
+    {
+        $beforeParked = $this->Vehicles->find()->where(['state' => 'parked'])->count();
+        $this->assertGreaterThanOrEqual(2, $beforeParked);
+
+        $count = $this->Vehicles->transitionAll('ignite', ['state' => 'parked']);
+
+        $afterParked = $this->Vehicles->find()->where(['state' => 'parked'])->count();
+        $this->assertEquals(0, $afterParked);
+        $this->assertEquals($beforeParked - $count, $afterParked);
+    }
+
+    public function tearDown()
     {
         parent::tearDown();
         unset($this->Vehicles);
