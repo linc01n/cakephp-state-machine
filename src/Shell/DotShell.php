@@ -3,6 +3,7 @@ namespace StateMachine\Shell;
 
 use Cake\Console\Shell;
 use Cake\Utility\Inflector;
+use Cake\Console\ConsoleOptionParser;
 
 /**
  * Dot Shell Class
@@ -23,10 +24,10 @@ class DotShell extends Shell
      *
      * By overriding this method you can configure the ConsoleOptionParser before returning it.
      *
-     * @return \Cake\Console\ConsoleOptionParser
+     * @return ConsoleOptionParser
      * @link https://book.cakephp.org/3.0/en/console-and-shells.html#configuring-options-and-generating-help
      */
-    public function getOptionParser()
+    public function getOptionParser(): ConsoleOptionParser
     {
         $parser = parent::getOptionParser();
         $parser->setDescription([
