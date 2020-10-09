@@ -188,7 +188,7 @@ class StateMachineBehaviorTest extends TestCase
 
     public function testCreateVehicle()
     {
-        $entity = $this->Vehicles->newEntity([]);
+        $entity = $this->Vehicles->newEntity([], ['validate' => false]);
         $entity->title = 'Toybota';
         $this->Vehicles->save($entity);
         $this->assertEquals(5, $entity->id);
