@@ -457,7 +457,7 @@ EOT;
         foreach ($this->_table->transitions[$transition] as $stateFrom => $stateTo) {
             $count += (int)$this->_table->updateAll(
                 [$stateField => Inflector::underscore($stateTo)],
-                $conditions + [$stateField => Inflector::underscore($stateFrom)]
+                [[$conditions], [$stateField => Inflector::underscore($stateFrom)]]
             );
         }
         return $count;
